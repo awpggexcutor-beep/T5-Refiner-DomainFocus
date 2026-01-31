@@ -36,6 +36,8 @@ Traditional **T5** or **mT5** models (collectively referred to as T5) face two m
 ### ✅ Core Features
 This project does not rely on complex hard-coded rules. Instead, it enhances model capabilities through optimized data preprocessing, masking strategies, and execution workflows:
 
+**Note:** This project uses the T5 tokenizer itself.  
+
 * **Generating training chunks from long texts based on paragraphs and punctuation**  
   Automatically constructs samples from novels, documents, or domain-specific corpora, splitting text based on paragraph boundaries and both Chinese and English punctuation. The last sentence of the previous text block is retained as a context prefix to ensure semantic continuity, mitigate cross-block semantic breaks, and constrain sample length to fit the model's context window.
 
@@ -93,6 +95,8 @@ Eliminating the need for manual anchor points to achieve end-to-end restoration 
 
 ### ✅当前核心功能
 本项目目前不依赖复杂的硬编码规则，而是通过优化数据预处理、掩码策略与执行流程来增强模型能力：
+
+**注意:** 本项目使用的是 T5 自带的分词器。
 
 * **长文本按段落与标点切分生成训练样本块**  
   自动从小说、文档或专业语料构造样本，基于段落边界和中英文标点切分，同时保留前文末尾句作为上下文前缀，保证样本语义连续，缓解跨段语义断裂，并对单样本长度进行约束以适配模型上下文窗口。
@@ -152,6 +156,8 @@ Eliminating the need for manual anchor points to achieve end-to-end restoration 
 ### ✅現在のコア機能
 本プロジェクトは、複雑なハードコーディングルールに依存せず、データ前処理、マスク戦略、および処理フローの最適化によりモデルの能力を強化します。
 
+**注意:** このプロジェクトでは、T5 自身のトークナイザーを使用しています。
+
 * **長文を段落および句読点で分割して学習サンプルを生成**  
   小説、文書、専門コーパスなどから自動的にサンプルを構築し、段落境界と日英句読点に基づいて分割します。さらに前のテキストブロックの末尾文をコンテキストとして保持することで、サンプル間の意味の連続性を確保し、段落を跨ぐ意味の断絶を緩和します。また、モデルのコンテキストウィンドウに合わせて単一サンプルの長さを制約します。
 
@@ -209,6 +215,8 @@ Herkömmliche **T5-** oder **mT5-Modelle** (zusammenfassend T5) haben zwei Haupt
 
 ### ✅ Aktuelle Kernfunktionen
 Dieses Projekt ist derzeit nicht auf komplexe Hardcodierungsregeln angewiesen, sondern verbessert die Modellfähigkeiten durch optimierte Datenvorverarbeitung, Maskierungsstrategien und Ablaufsteuerung:
+
+**Hinweis:** Dieses Projekt verwendet den T5-eigenen Tokenizer.
 
 * **Erstellung von Trainingsdatenblöcken aus langen Texten anhand von Absätzen und Satzzeichen**  
   Automatische Generierung von Samples aus Romanen, Dokumenten oder Fachtexten, basierend auf Absatzgrenzen und chinesischen/englischen Satzzeichen. Gleichzeitig werden die letzten Sätze des vorherigen Blocks als Kontextpräfix beibehalten, um die semantische Kontinuität der Samples sicherzustellen, semantische Brüche zwischen Absätzen zu reduzieren und die Länge einzelner Samples an das Kontextfenster des Modells anzupassen.
@@ -268,6 +276,8 @@ Les modèles **T5** ou **mT5** conventionnels (collectivement appelés T5) prés
 ### ✅ Fonctions clés actuelles
 Ce projet ne dépend pas de règles codées complexes, mais renforce les capacités du modèle grâce à l'optimisation du prétraitement des données, des stratégies de masquage et du flux d'exécution :
 
+**Remarque:** Ce projet utilise le tokenizer intégré de T5.
+
 * **Découpage des textes longs en échantillons d'entraînement selon les paragraphes et la ponctuation**  
   Génération automatique d'échantillons à partir de romans, documents ou corpus spécialisés, en se basant sur les limites des paragraphes et la ponctuation en chinois et en anglais. Les phrases finales du bloc précédent sont conservées comme préfixe contextuel pour assurer la continuité sémantique et réduire les ruptures entre les segments, tout en limitant la longueur de chaque échantillon pour s'adapter à la fenêtre de contexte du modèle.
 
@@ -325,6 +335,8 @@ Los modelos tradicionales **T5** o **mT5** (colectivamente T5) presentan dos pro
 
 ### ✅ Funciones Principales Actuales
 Este proyecto actualmente no depende de reglas codificadas complejas, sino que mejora la capacidad del modelo a través de la optimización del preprocesamiento de datos, las estrategias de enmascaramiento y el flujo de ejecución:
+
+**Nota:** Este proyecto utiliza el tokenizador propio de T5.
 
 * **Generación de bloques de entrenamiento a partir de textos largos mediante segmentación por párrafos y puntuación**  
   Construye automáticamente muestras a partir de novelas, documentos o corpus especializados, segmentando según los límites de párrafos y la puntuación en chino e inglés. Además, conserva la última oración del bloque anterior como prefijo contextual, asegurando la continuidad semántica de las muestras, mitigando rupturas entre párrafos y ajustando la longitud de cada muestra para adaptarse a la ventana de contexto del modelo.
@@ -384,6 +396,8 @@ Lograr la reparación de extremo a extremo del texto dañado por OCR sin necesid
 ### ✅वर्तमान मुख्य विशेषताएं
 इस परियोजना में वर्तमान में जटिल हार्डकोडेड नियमों पर निर्भरता नहीं है, बल्कि डेटा पूर्व-संसाधन, मास्किंग रणनीतियों और निष्पादन प्रवाह को अनुकूलित करके मॉडल की क्षमता बढ़ाई जाती है:
 
+**ध्यान दें:** इस प्रोजेक्ट में T5 का अपना टोकनाइज़र उपयोग किया गया है।
+
 * **लंबे टेक्स्ट को पैरा और विराम चिह्न के अनुसार प्रशिक्षण नमूना ब्लॉक में विभाजित करना**  
   स्वचालित रूप से उपन्यास, दस्तावेज़ या पेशेवर कॉर्पस से नमूने तैयार किए जाते हैं, पैरा की सीमाओं और अंग्रेज़ी-चीनी विराम चिह्नों के आधार पर विभाजन किया जाता है, साथ ही पिछले टेक्स्ट की अंतिम पंक्ति को संदर्भ पूर्ववर्ती (context prefix) के रूप में रखा जाता है ताकि नमूने की अर्थपूर्ण निरंतरता बनी रहे, अंशों के बीच अर्थ संबंध टूटने की संभावना कम हो और प्रत्येक नमूने की लंबाई मॉडल के संदर्भ विंडो के अनुरूप नियंत्रित रहे।
 
@@ -442,6 +456,8 @@ mT5-base मानक मॉडल के साथ प्रारंभिक 
 ### ✅ 현재 핵심 기능
 본 프로젝트는 현재 복잡한 하드코딩 규칙에 의존하지 않고, 데이터 전처리, 마스킹 전략 및 실행 프로세스를 최적화하여 모델 성능을 향상시키는 방식으로 설계되었습니다.
 
+**주의:** 본 프로젝트는 T5 자체 토크나이저를 사용합니다。
+
 * **긴 텍스트를 단락 및 문장 부호 기준으로 나누어 학습 샘플 생성**  
   소설, 문서 또는 전문 코퍼스에서 자동으로 샘플을 생성하며, 단락 경계와 한영 문장 부호를 기준으로 분할합니다. 이전 텍스트의 마지막 문장을 컨텍스트 접두사로 유지하여 샘플의 의미 연속성을 보장하고, 단락 간 의미 단절을 완화하며, 단일 샘플 길이를 모델의 컨텍스트 창에 맞게 제한합니다.
 
@@ -499,6 +515,8 @@ Os modelos tradicionais **T5** ou **mT5** (coletivamente chamados de T5) apresen
 
 ### ✅ Principais Funcionalidades Atuais
 Este projeto atualmente não depende de regras de codificação complexas, mas aprimora a capacidade do modelo por meio da otimização do pré-processamento de dados, das estratégias de máscara e do fluxo de execução:
+
+**Nota:** Este projeto utiliza o próprio tokenizer do T5.
 
 * **Divisão de textos longos em blocos de treinamento por parágrafo e pontuação**  
   Constrói automaticamente amostras a partir de romances, documentos ou corpora especializados, dividindo com base em limites de parágrafos e pontuação em chinês e inglês, ao mesmo tempo em que mantém a frase final do bloco anterior como prefixo contextual, garantindo a continuidade semântica das amostras, mitigando quebras de sentido entre blocos e controlando o tamanho das amostras para se adequar à janela de contexto do modelo.
