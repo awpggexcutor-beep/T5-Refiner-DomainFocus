@@ -23,7 +23,7 @@
 <a name="english"></a>
 ## ⭐️ English
 
-T5-Refiner-DomainFocus aims to empower models with intrinsic "semantic resilience" through pre-training stage strategy optimization, enabling more robust handling of text corruption and the injection of domain-specific expertise.
+**T5-Refiner-DomainFocus** aims to empower models with intrinsic "semantic resilience" through **pre-training stage** strategy optimization, enabling more robust handling of text corruption and the injection of domain-specific expertise.
 
 ### 📖 Project Background
 During **the digitization of medical records**, **OCR (Optical Character Recognition)** often suffers from "character defects" in core terminology due to damaged paper, stamp occlusion, or other physical factors.
