@@ -566,6 +566,8 @@ Realizar a reparação ponta a ponta de textos danificados por OCR sem a necessi
 
 -[Demo-EN](./Demo-EN.txt)
 
+（Most of the application environment for this project is in Chinese, which may cause some issues with handling English.）
+
 - ⭐️[Demo-CN](./Demo-CN.txt)
   
 ---
