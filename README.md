@@ -34,18 +34,29 @@ Traditional **T5** or **mT5** models (collectively referred to as T5) face two m
 * **Tokenization Misalignment**: When letters are missing from a term, the tokenizer breaks it into meaningless fragments, causing the model to lose its semantic focus.
 
 ### ✅ Core Features
-This project enhances model capability by optimizing the data preprocessing pipeline rather than relying on complex hard-coded rules:
+This project does not rely on complex hard-coded rules. Instead, it enhances model capabilities through optimized data preprocessing, masking strategies, and execution workflows:
 
-* **Expert Lexicon-Guided Atomic Masking**:
-By leveraging custom lexicons, the model is forced to treat professional terms (e.g., Acute Anterior Myocardial Infarction) as indivisible units during masking. This forces the model to derive answers from contextual logic rather than taking shortcuts via residual characters.
+* **Generating training chunks from long texts based on paragraphs and punctuation**  
+  Automatically constructs samples from novels, documents, or domain-specific corpora, splitting text based on paragraph boundaries and both Chinese and English punctuation. The last sentence of the previous text block is retained as a context prefix to ensure semantic continuity, mitigate cross-block semantic breaks, and constrain sample length to fit the model's context window.
 
-* **Manual Enhanced Training**:
-Supports manual adjustment of masking probabilities for specific high-difficulty terms (**💡Recommended: 50%-70%, not to exceed 80%**), while simultaneously increasing the global masking rate (20%-25%).
+* **Atomic masking guided by an expert vocabulary**  
+  Using a custom domain-specific vocabulary, professional terms (e.g., *Acute Anterior Wall Myocardial Infarction*, *Percutaneous Coronary Intervention*) are masked as indivisible units. This prevents character-level shortcuts and forces the model to rely on contextual semantics and domain logic for reconstruction.
 
-* **Automatic Punctuation Avoidance**:
-Prevents the introduction of noise interference during the masking process.
+* **Manually controllable enhanced masking strategy**  
+  Supports increasing the masking probability for high-difficulty terms (**💡 recommended 50%–70%, not exceeding 80%**) while simultaneously adjusting the overall mask ratio (around 20%–25%), enabling targeted reinforcement of the model's reasoning ability on weaker knowledge points.
 
-**By creating scenarios of "extreme information loss," the model is compelled to maintain accurate reconstruction of professional semantics even under the worst input conditions.**
+* **Automatic avoidance of punctuation and non-semantic tokens**  
+  Masking automatically skips Chinese and English punctuation, symbols, and tokenizer unknown characters (`<unk>`), ensuring that every masked span corresponds to a meaningful semantic unit.
+
+* **Automatic merging of consecutive or overlapping spans**  
+  Adjacent or overlapping mask spans are automatically merged to maintain the correct order of `<extra_id_n>` input/output pairs, ensuring continuous training signals and full compatibility with T5's original span corruption training methodology.
+
+* **Multithreaded parallel processing and automated sample aggregation**  
+  Supports adjustable thread counts for parallel sample generation, significantly improving efficiency on large-scale corpora. All generated samples are automatically aggregated in their original order and output as a standardized JSONL dataset ready for direct training.
+
+**By combining context-aware chunking, keyword-prioritized masking, random span corruption, and artificially created "extreme information loss" scenarios, the model is trained to maintain accurate understanding and reconstruction of professional semantics even under highly challenging input conditions.**
+
+> Applicable scenarios: medical, legal, technical documentation, or any domain requiring precise semantic understanding.
 
 ### ❗️ Training Notes
 * **Preventing Early Stopping**: After preprocessing, T5 models may exhibit slow loss reduction or local fluctuations, which can trick systems into stopping training prematurely.
@@ -77,22 +88,33 @@ Eliminating the need for manual anchor points to achieve end-to-end restoration 
 ### 📖项目背景
 在处理**医学档案数字化时**，**OCR（光学字符识别）** 常因纸质受损、印章遮挡等原因，导致核心术语出现“字符缺损”。
 传统的 **T5** 或 **mT5** 模型(统称T5）在处理这些受损文本时存在两个主要问题：
-* 随机遮蔽的局限性：导致模型只学会了根据词根“猜词”，而没有真正理解完整的医学概念。
-* 分词错位问题：当术语丢失字母时，分词器会将其切碎为无意义的碎片，导致模型失去语义重心。
+* **随机遮蔽的局限性**：导致模型只学会了根据词根“猜词”，而没有真正理解完整的医学概念。
+* **分词错位问题**：当术语丢失字母时，分词器会将其切碎为无意义的碎片，导致模型失去语义重心。
 
 ### ✅当前核心功能
-本项目目前不依赖复杂的硬编码规则，而是通过优化数据预处理流程来增强模型能力：
+本项目目前不依赖复杂的硬编码规则，而是通过优化数据预处理、掩码策略与执行流程来增强模型能力：
 
-* **专家词库引导的原子化遮蔽**：
-依托自定义词库，强制模型将专业术语（如：急性前壁心肌梗死）视为不可分割的整体进行遮蔽。通过这种方式，迫使模型从上下文的逻辑中寻找答案，而非通过残余字符投机取巧。
+* **长文本按段落与标点切分生成训练样本块**  
+  自动从小说、文档或专业语料构造样本，基于段落边界和中英文标点切分，同时保留前文末尾句作为上下文前缀，保证样本语义连续，缓解跨段语义断裂，并对单样本长度进行约束以适配模型上下文窗口。
 
-* **人工设定强化训练**：
-支持手动提高特定高难度术语的遮蔽概率（**💡推荐在50%-70%，不宜超过80%**），同时可同步提高整体的遮蔽率（20%-25%）。
+* **专家词库引导的原子化遮蔽**  
+  利用自定义领域词库，将专业术语（如：急性前壁心肌梗死、经皮冠状动脉介入治疗）作为不可分割的整体进行遮蔽，阻断字符级投机路径，迫使模型依赖上下文语义与领域逻辑进行还原。
 
-* **自动规避标点符号**：
-防止引入干扰。
+* **人工可控强化遮蔽策略**  
+  支持对高难度术语手动提升遮蔽概率（**💡推荐 50%–70%，不宜超过 80%**），并可同步调整总体遮蔽率（约 20%–25%），实现定向强化模型在薄弱知识点上的推理能力。
 
-**通过人为制造“极端信息缺失”的场景，强制模型在最差的输入情况下依然能保持对专业语义的准确还原。**
+* **自动规避标点符号与非语义 token**  
+  遮蔽过程中自动跳过中英文标点、符号及 tokenizer 未知字符（`<unk>`），保证每个 mask span 都对应有效语义单元。
+
+* **连续或重叠 span 自动合并**  
+  对相邻或重叠的掩码 span 进行自动合并，确保生成的 `<extra_id_n>` 输入/输出对顺序统一、训练信号连续，完全兼容 T5 原论文的 span corruption 训练规范。
+
+* **多线程并行处理与自动化样本回传**  
+  支持可调线程数并行生成样本，大幅提升大规模语料处理效率；所有生成样本自动回传并按原文顺序汇总，最终输出为可直接用于训练的标准化 JSONL 数据集。
+
+**通过上下文感知的数据构造、关键词优先遮蔽、随机 span 掩码及人为制造的“极端信息缺失”场景，模型在最不利输入条件下依然能够保持对专业语义的准确理解与还原能力。**  
+
+> 适用场景：医学、法律、技术文档等需要精确语义理解的专业语料。
 
 ### ❗️训练注意事项
 * **防止模型提前停止**：在预处理之后，T5 模型可能会出现 Loss 下降缓慢或产生局部波动的假象，导致系统错误地提前停止训练。
@@ -128,18 +150,29 @@ Eliminating the need for manual anchor points to achieve end-to-end restoration 
 * **トークナイズの不一致問題**：用語の文字が欠落すると、トークナイザーがそれを無意味な断片に細分化してしまい、モデルが意味の重心を失う。
 
 ### ✅現在のコア機能
-本プロジェクトは現在、複雑なハードコーディングのルールに依存せず、データの前処理フローを最適化することでモデルの能力を強化しています：
+本プロジェクトは、複雑なハードコーディングルールに依存せず、データ前処理、マスク戦略、および処理フローの最適化によりモデルの能力を強化します。
 
-* **専門用語集ガイドによるアトミック・マスキング**：
-カスタム用語集に基づき、専門用語（例：急性前壁心筋梗塞）を分割不可能な一体として強制的にマスキングします。この方法により、残存文字からの憶測ではなく、文脈の論理から答えを見つけ出すようモデルに強制します。
+* **長文を段落および句読点で分割して学習サンプルを生成**  
+  小説、文書、専門コーパスなどから自動的にサンプルを構築し、段落境界と日英句読点に基づいて分割します。さらに前のテキストブロックの末尾文をコンテキストとして保持することで、サンプル間の意味の連続性を確保し、段落を跨ぐ意味の断絶を緩和します。また、モデルのコンテキストウィンドウに合わせて単一サンプルの長さを制約します。
 
-* **アーティフィシャル・セッティングによる強化トレーニング**：
-特定の高難度用語のマスキング確率を手動で高めることをサポート（**💡推奨50%-70%、80%を超えないこと**）。同時に、全体のマスキング率（20%-25%）を同期して高めることが可能です。
+* **専門用語辞書に基づく原子化マスキング（Atomic Masking）**  
+  カスタムの専門用語辞書を利用し、専門用語（例：急性前壁心筋梗塞、経皮的冠動脈インターベンション）を分割不可能な単位としてマスクします。これにより、文字単位での推測を防ぎ、モデルがコンテキストの意味や領域の論理に基づいて復元するよう促します。
 
-* **句読点の自動回避**：
-ノイズの混入を防止します。
+* **人工制御による強化マスキング戦略**  
+  高難度の専門用語についてマスク確率を手動で上げることが可能（**💡推奨 50%–70%、80%を超えないこと**）で、同時に全体のマスク率（約20%–25%）も調整できます。これにより、モデルが弱い知識領域での推論能力を強化します。
 
-**意図的に「極端な情報の欠落」シーンを作り出すことで、最悪の入力状況下でも専門的な意味を正確に復元できる能力をモデルに強制します。**
+* **句読点および非意味トークンの自動回避**  
+  マスキング時に日英の句読点、記号、および tokenizer 未知文字（`<unk>`）を自動でスキップし、すべてのマスク範囲が有効な意味単位に対応するよう保証します。
+
+* **連続または重複するspanの自動統合**  
+  隣接または重複するマスク範囲を自動で統合し、生成される `<extra_id_n>` 入力/出力ペアの順序を統一、学習信号の連続性を確保します。これにより、T5論文に準拠した span corruption 学習規格に完全対応します。
+
+* **マルチスレッド並列処理とサンプルの自動回収**  
+  スレッド数を調整可能な並列処理により、大規模コーパスのサンプル生成効率を大幅に向上させます。生成されたすべてのサンプルは自動で回収され、原文順に整理された後、学習に直接使用可能な標準JSONLデータセットとして出力されます。
+
+**コンテキスト認識型のデータ構築、キーワード優先マスキング、ランダムspanマスク、および人工的に作られた「極端な情報欠損」シナリオにより、モデルは最も不利な入力条件下でも専門用語の正確な理解と復元能力を保持できます。**
+
+> 適用例：医学、法律、技術文書など、正確な意味理解が求められる専門コーパス。
 
 ### ❗️訓練上の注意点
 * **モデルの早期停止の防止**：前処理後、T5モデルは損失（Loss）の下落が緩やかになったり、局所的な変動が生じたりする「見かけ上の停滞」が発生し、システムが誤って訓練を早期終了させる可能性があります。
@@ -175,18 +208,29 @@ Herkömmliche **T5-** oder **mT5-Modelle** (zusammenfassend T5) haben zwei Haupt
 * **Tokenisierungs-Fehlausrichtung**: Wenn Buchstaben in Fachbegriffen fehlen, zerlegt der Tokenizer diese in bedeutungslose Fragmente, wodurch das Modell seinen semantischen Fokus verliert.
 
 ### ✅ Aktuelle Kernfunktionen
-Dieses Projekt verlässt sich derzeit nicht auf komplexe Hardcoding-Regeln, sondern stärkt die Modellfähigkeiten durch die Optimierung des Daten-Preprocessing-Workflows:
+Dieses Projekt ist derzeit nicht auf komplexe Hardcodierungsregeln angewiesen, sondern verbessert die Modellfähigkeiten durch optimierte Datenvorverarbeitung, Maskierungsstrategien und Ablaufsteuerung:
 
-* **Atomare Maskierung gesteuert durch Experten-Vokabular**:
-Auf Basis eines benutzerdefinierten Vokabulars wird das Modell gezwungen, Fachbegriffe (z. B. akuter Vorderwandmyokardinfarkt) als untrennbare Einheit zu maskieren. Auf diese Weise wird das Modell gezwungen, Antworten aus der Logik des Kontextes zu finden, anstatt durch verbleibende Zeichen oberflächliche Rückschlüsse zu ziehen.
+* **Erstellung von Trainingsdatenblöcken aus langen Texten anhand von Absätzen und Satzzeichen**  
+  Automatische Generierung von Samples aus Romanen, Dokumenten oder Fachtexten, basierend auf Absatzgrenzen und chinesischen/englischen Satzzeichen. Gleichzeitig werden die letzten Sätze des vorherigen Blocks als Kontextpräfix beibehalten, um die semantische Kontinuität der Samples sicherzustellen, semantische Brüche zwischen Absätzen zu reduzieren und die Länge einzelner Samples an das Kontextfenster des Modells anzupassen.
 
-* **Verstärktes Training durch manuelle Einstellungen**:
-Unterstützt die manuelle Erhöhung der Maskierungswahrscheinlichkeit für spezifische, hochgradig schwierige Begriffe (**💡 empfohlen bei 50%-70%, nicht über 80%**), während gleichzeitig die allgemeine Maskierungsrate (20%-25%) synchron erhöht werden kann.
+* **Atomare Maskierung gesteuert durch Experten-Wortlisten**  
+  Verwendung benutzerdefinierter Fachwortlisten, um Fachbegriffe (z. B. *akuter Vorderwandinfarkt*, *perkutane Koronarintervention*) als unteilbare Einheiten zu maskieren. Dies verhindert spekulative Charakter-basierte Vorhersagen und zwingt das Modell, die Maske anhand des Kontextes und der Fachlogik wiederherzustellen.
 
-* **Automatische Vermeidung von Satzzeichen**:
-Verhindert die Einführung von Störfaktoren.
+* **Manuell steuerbare verstärkte Maskierungsstrategie**  
+  Ermöglicht die manuelle Erhöhung der Maskierungswahrscheinlichkeit für schwierige Begriffe (**💡 empfohlen 50%–70%, nicht über 80%**) und gleichzeitig die Anpassung der Gesamtmaskierungsrate (ca. 20%–25%), um gezielt die Fähigkeit des Modells zu stärken, in schwierigen Wissensbereichen semantische Schlussfolgerungen zu ziehen.
 
-**Durch die künstliche Erzeugung von Szenarien mit „extremem Informationsverlust“ wird das Modell gezwungen, selbst bei schlechtesten Eingabebedingungen eine präzise Wiederherstellung der Fachsemantik beizubehalten.**
+* **Automatische Vermeidung von Satzzeichen und nicht-semantischen Token**  
+  Während der Maskierung werden automatisch Satzzeichen, Symbole und unbekannte Token des Tokenizers (`<unk>`) übersprungen, sodass jeder maskierte Bereich einem sinnvollen semantischen Einheit entspricht.
+
+* **Automatische Zusammenführung von aufeinanderfolgenden oder überlappenden Spans**  
+  Zusammenführung benachbarter oder überlappender Maskenspans, um sicherzustellen, dass die generierten `<extra_id_n>` Eingabe-/Ausgabe-Paare in der richtigen Reihenfolge und mit kontinuierlichem Trainingssignal vorliegen, vollständig kompatibel mit der Span-Corruption-Methode des T5-Originalpapiers.
+
+* **Mehrthreading und automatisches Zurückschreiben der Samples**  
+  Unterstützung einer konfigurierbaren Anzahl von Threads zur parallelen Generierung von Samples, wodurch die Verarbeitung großer Korpora erheblich beschleunigt wird. Alle erzeugten Samples werden automatisch zurückgeführt und in der ursprünglichen Reihenfolge zusammengeführt, schließlich als standardisiertes JSONL-Dataset ausgegeben, das direkt für das Training verwendet werden kann.
+
+**Durch kontextbewusste Datenkonstruktion, prioritäre Maskierung von Schlüsselbegriffen, zufällige Span-Maskierung und absichtlich erzeugte „extreme Informationsverluste“-Szenarien bleibt das Modell selbst unter widrigsten Eingabebedingungen in der Lage, die Fachsemantik korrekt zu verstehen und wiederherzustellen.**
+
+> Anwendungsbereiche: Medizinische, juristische, technische Dokumente und andere Fachtexte, die ein präzises semantisches Verständnis erfordern.
 
 ### ❗️ Hinweise zum Training
 * **Vorzeitigen Stopp des Modells verhindern**: Nach dem Preprocessing kann es bei T5-Modellen zu einer Täuschung durch langsam sinkenden Loss oder lokale Schwankungen kommen, was dazu führt, dass das System das Training fälschlicherweise vorzeitig stoppt.
@@ -222,18 +266,29 @@ Les modèles **T5** ou **mT5** conventionnels (collectivement appelés T5) prés
 * **Problème de désalignement de la tokenisation** : Lorsqu'un terme perd des lettres, le tokenizer le fragmente en morceaux dénués de sens, faisant perdre au modèle son centre de gravité sémantique.
 
 ### ✅ Fonctions clés actuelles
-Ce projet ne repose pas sur des règles codées en dur complexes, mais renforce les capacités du modèle en optimisant le flux de prétraitement des données :
+Ce projet ne dépend pas de règles codées complexes, mais renforce les capacités du modèle grâce à l'optimisation du prétraitement des données, des stratégies de masquage et du flux d'exécution :
 
-* **Masquage atomique guidé par un lexique d'experts** :
-S'appuyant sur un lexique personnalisé, il force le modèle à considérer les termes techniques (ex : infarctus aigu du myocarde de la paroi antérieure) comme un tout indivisible lors du masquage. De cette manière, le modèle est contraint de chercher des réponses dans la logique du contexte plutôt que de spéculer sur des caractères résiduels.
+* **Découpage des textes longs en échantillons d'entraînement selon les paragraphes et la ponctuation**  
+  Génération automatique d'échantillons à partir de romans, documents ou corpus spécialisés, en se basant sur les limites des paragraphes et la ponctuation en chinois et en anglais. Les phrases finales du bloc précédent sont conservées comme préfixe contextuel pour assurer la continuité sémantique et réduire les ruptures entre les segments, tout en limitant la longueur de chaque échantillon pour s'adapter à la fenêtre de contexte du modèle.
 
-* **Entraînement renforcé par paramétrage manuel** :
-Permet d'augmenter manuellement la probabilité de masquage de certains termes particulièrement difficiles (**💡 recommandé entre 50% et 70%, ne pas dépasser 80%**), tout en augmentant simultanément le taux de masquage global (20%-25%).
+* **Masquage atomique guidé par un lexique d'experts**  
+  Utilisation d'un lexique de domaine personnalisé pour traiter les termes spécialisés (ex : infarctus aigu du myocarde de la paroi antérieure, intervention coronaire percutanée) comme des unités indivisibles lors du masquage. Cela bloque les chemins de prédiction basés sur les caractères et force le modèle à s'appuyer sur le contexte et la logique du domaine pour restaurer le contenu.
 
-* **Évitement automatique de la ponctuation** :
-Empêche l'introduction d'interférences.
+* **Stratégie de masquage renforcée et contrôlable manuellement**  
+  Possibilité d'augmenter manuellement la probabilité de masquage pour des termes difficiles (**💡 recommandé 50%–70%, ne pas dépasser 80%**), tout en ajustant simultanément le taux de masquage global (environ 20%–25%), afin de renforcer de manière ciblée la capacité du modèle à raisonner sur des points de connaissance faibles.
 
-**En créant artificiellement des scénarios de « perte d'information extrême », le modèle est contraint de maintenir une restitution précise de la sémantique professionnelle, même dans les pires conditions d'entrée.**
+* **Évitement automatique de la ponctuation et des tokens non sémantiques**  
+  Le masquage ignore automatiquement la ponctuation chinoise et anglaise, les symboles ainsi que les caractères inconnus du tokenizer (`<unk>`), garantissant que chaque span masqué correspond à une unité sémantique valide.
+
+* **Fusion automatique des spans consécutifs ou chevauchants**  
+  Les spans de masquage adjacents ou chevauchants sont fusionnés automatiquement, assurant un ordre cohérent des entrées/sorties `<extra_id_n>` et un signal d'entraînement continu, entièrement compatible avec la norme de span corruption du papier original T5.
+
+* **Traitement parallèle multithread et retour automatisé des échantillons**  
+  Génération d'échantillons en parallèle avec un nombre de threads configurable, améliorant considérablement l'efficacité sur de grands corpus ; tous les échantillons générés sont automatiquement réintégrés et triés selon l'ordre original du texte, pour produire un dataset JSONL standard directement exploitable pour l'entraînement.
+
+**Grâce à la construction de données consciente du contexte, au masquage prioritaire des mots-clés, au masquage aléatoire de spans et à la création de scénarios de "perte d'information extrême", le modèle reste capable de comprendre et de restaurer avec précision le sens des termes spécialisés même dans des conditions d'entrée les plus défavorables.**
+
+> Cas d'utilisation : corpus spécialisés nécessitant une compréhension sémantique précise, tels que la médecine, le droit ou les documents techniques.
 
 ### ❗️ Précautions d'entraînement
 * **Prévenir l'arrêt prématuré du modèle** : Après le prétraitement, le modèle T5 peut donner l'illusion d'une baisse lente de la perte (Loss) ou de fluctuations locales, ce qui peut amener le système à arrêter l'entraînement prématurément par erreur.
@@ -269,18 +324,29 @@ Los modelos tradicionales **T5** o **mT5** (colectivamente T5) presentan dos pro
 * **Problemas de desalineación de la tokenización**: Cuando un término pierde letras, el tokenizador lo fragmenta en pedazos sin sentido, lo que hace que el modelo pierda el centro de gravedad semántico.
 
 ### ✅ Funciones Principales Actuales
-Este proyecto no depende actualmente de reglas complejas codificadas a mano, sino que mejora las capacidades del modelo optimizando el flujo de preprocesamiento de datos:
+Este proyecto actualmente no depende de reglas codificadas complejas, sino que mejora la capacidad del modelo a través de la optimización del preprocesamiento de datos, las estrategias de enmascaramiento y el flujo de ejecución:
 
-* **Enmascaramiento Atómico guiado por léxico experto**:
-Basándose en un léxico personalizado, se obliga al modelo a considerar los términos técnicos (ej. infarto agudo de miocardio de la pared anterior) como un todo indivisible al enmascararlos. De esta forma, se fuerza al modelo a buscar respuestas en la lógica del contexto, en lugar de especular a través de caracteres residuales.
+* **Generación de bloques de entrenamiento a partir de textos largos mediante segmentación por párrafos y puntuación**  
+  Construye automáticamente muestras a partir de novelas, documentos o corpus especializados, segmentando según los límites de párrafos y la puntuación en chino e inglés. Además, conserva la última oración del bloque anterior como prefijo contextual, asegurando la continuidad semántica de las muestras, mitigando rupturas entre párrafos y ajustando la longitud de cada muestra para adaptarse a la ventana de contexto del modelo.
 
-* **Entrenamiento Reforzado mediante configuración manual**:
-Permite aumentar manualmente la probabilidad de enmascaramiento de términos específicos de alta dificultad (💡 recomendado entre 50%-70%, no debe superar el 80%), pudiendo aumentar simultáneamente la tasa de enmascaramiento general (20%-25%).
+* **Enmascaramiento atómico guiado por un vocabulario de expertos**  
+  Aprovecha un vocabulario de dominio personalizado para tratar términos especializados (por ejemplo: infarto agudo de pared anterior, intervención coronaria percutánea) como unidades indivisibles al enmascarar, bloqueando rutas de predicción a nivel de carácter y obligando al modelo a restaurar la información basándose en la semántica del contexto y la lógica del dominio.
 
-* **Evasión Automática de signos de puntuación**:
-Previene la introducción de interferencias.
+* **Estrategia de enmascaramiento reforzada y controlable manualmente**  
+  Permite aumentar manualmente la probabilidad de enmascaramiento de términos complejos (**💡 recomendado 50%–70%, no superar 80%**) y ajustar simultáneamente la tasa de enmascaramiento global (aprox. 20%–25%), para reforzar de manera dirigida la capacidad de razonamiento del modelo sobre puntos de conocimiento débiles.
 
-**Al crear artificialmente escenarios de "pérdida extrema de información", se obliga al modelo a mantener una restauración precisa de la semántica profesional incluso en las peores condiciones de entrada.**
+* **Evitar automáticamente puntuación y tokens no semánticos**  
+  Durante el enmascaramiento, se omiten automáticamente signos de puntuación en chino e inglés, símbolos y caracteres desconocidos para el tokenizer (`<unk>`), asegurando que cada span enmascarado corresponda a una unidad semántica válida.
+
+* **Fusión automática de spans consecutivos o superpuestos**  
+  Los spans de enmascaramiento adyacentes o superpuestos se fusionan automáticamente, garantizando que los pares de entrada/salida `<extra_id_n>` se generen en orden, con señales de entrenamiento continuas, cumpliendo totalmente con la especificación de span corruption de T5.
+
+* **Procesamiento paralelo multihilo y retorno automático de muestras**  
+  Soporta generación paralela de muestras con un número configurable de hilos, aumentando significativamente la eficiencia en corpus de gran escala; todas las muestras generadas se devuelven automáticamente y se reorganizan según el orden original, produciendo finalmente un conjunto de datos JSONL estandarizado listo para entrenamiento.
+
+**Mediante la construcción de datos consciente del contexto, enmascaramiento prioritario de palabras clave, spans aleatorios y escenarios de “pérdida extrema de información” artificialmente creados, el modelo puede mantener la comprensión y restauración precisa de la semántica profesional incluso en las condiciones de entrada más desfavorables.**
+
+> Escenarios de aplicación: corpus especializados en medicina, derecho, documentos técnicos u otros que requieran comprensión semántica precisa.
 
 ### ❗️ Notas sobre el Entrenamiento
 * **Prevenir la parada temprana del modelo**: Tras el preprocesamiento, el modelo T5 puede mostrar una caída lenta de la pérdida (Loss) o fluctuaciones locales, lo que podría llevar al sistema a detener el entrenamiento prematuramente por error.
@@ -316,18 +382,29 @@ Lograr la reparación de extremo a extremo del texto dañado por OCR sin necesid
 * **टोकनाइज़ेशन मिसअलाइनमेंट की समस्या**: जब शब्दावली के अक्षर गायब होते हैं, तो टोकनाइज़र उसे अर्थहीन टुकड़ों में काट देता है, जिससे मॉडल अपना सिमेंटिक केंद्र खो देता है।
 
 ### ✅वर्तमान मुख्य विशेषताएं
-यह प्रोजेक्ट वर्तमान में जटिल हार्ड-कोडिंग नियमों पर निर्भर रहने के बजाय, डेटा प्री-प्रोसेसिंग प्रवाह को अनुकूलित करके मॉडल की क्षमता को बढ़ाता है:
+इस परियोजना में वर्तमान में जटिल हार्डकोडेड नियमों पर निर्भरता नहीं है, बल्कि डेटा पूर्व-संसाधन, मास्किंग रणनीतियों और निष्पादन प्रवाह को अनुकूलित करके मॉडल की क्षमता बढ़ाई जाती है:
 
-* **विशेषज्ञ शब्दावली द्वारा निर्देशित परमाणु मास्किंग (Atomic Masking)**:
-कस्टम शब्दावली के आधार पर, मॉडल को पेशेवर शब्दों (जैसे: तीव्र पूर्वकाल दीवार रोधगलन / Acute anterior wall myocardial infarction) को एक अविभाज्य इकाई के रूप में मास्क करने के लिए मजबूर किया जाता है। इस तरह, मॉडल को शेष अक्षरों से अनुमान लगाने के बजाय संदर्भ के तर्क से उत्तर खोजने के लिए मजबूर किया जाता है।
+* **लंबे टेक्स्ट को पैरा और विराम चिह्न के अनुसार प्रशिक्षण नमूना ब्लॉक में विभाजित करना**  
+  स्वचालित रूप से उपन्यास, दस्तावेज़ या पेशेवर कॉर्पस से नमूने तैयार किए जाते हैं, पैरा की सीमाओं और अंग्रेज़ी-चीनी विराम चिह्नों के आधार पर विभाजन किया जाता है, साथ ही पिछले टेक्स्ट की अंतिम पंक्ति को संदर्भ पूर्ववर्ती (context prefix) के रूप में रखा जाता है ताकि नमूने की अर्थपूर्ण निरंतरता बनी रहे, अंशों के बीच अर्थ संबंध टूटने की संभावना कम हो और प्रत्येक नमूने की लंबाई मॉडल के संदर्भ विंडो के अनुरूप नियंत्रित रहे।
 
-* **मैन्युअल सेटिंग द्वारा सुदृढ़ीकरण प्रशिक्षण**:
-विशिष्ट कठिन शब्दों की मास्किंग संभावना को मैन्युअल रूप से बढ़ाने का समर्थन (**💡अनुशंसित 50%-70%, 80% से अधिक नहीं**), साथ ही कुल मास्किंग दर (20%-25%) को भी बढ़ाया जा सकता है।
+* **विशेषज्ञ शब्दकोश द्वारा निर्देशित परमाणु मास्किंग (Atomic Masking)**  
+  कस्टम डोमेन शब्दकोश का उपयोग करके पेशेवर शब्दों (जैसे: तीव्र अग्रभाग हृदयाघात, पर्कुटेनियस कोरोनरी इंटरवेंशन) को अपरिभाज्य इकाई के रूप में मास्क किया जाता है, जिससे अक्षर-स्तरीय अनुमान लगाने के रास्ते अवरुद्ध होते हैं और मॉडल को केवल संदर्भ अर्थ और डोमेन लॉजिक पर भरोसा करके पुनर्निर्माण करना पड़ता है।
 
-* **विराम चिह्नों से स्वचालित बचाव**:
-हस्तक्षेप को रोकने के लिए।
+* **मानव-नियंत्रित सशक्त मास्किंग रणनीति**  
+  उच्च कठिनाई वाले शब्दों के लिए मास्किंग संभावना मैन्युअली बढ़ाने का समर्थन (**💡 सुझाया गया: 50%–70%, 80% से अधिक नहीं**) और समग्र मास्किंग दर (लगभग 20%–25%) को समकालिक रूप से समायोजित करना संभव है, जिससे कमजोर ज्ञान बिंदुओं पर मॉडल की तर्क क्षमता को लक्षित रूप से सशक्त किया जा सके।
 
-**जानबूझकर "अत्यधिक सूचना कमी" के परिदृश्य बनाकर, मॉडल को सबसे खराब इनपुट स्थितियों में भी पेशेवर अर्थों को सटीक रूप से पुनर्स्थापित करने के लिए मजबूर किया जाता直।**
+* **स्वचालित रूप से विराम चिह्न और गैर-अर्थपूर्ण token से बचाव**  
+  मास्किंग प्रक्रिया के दौरान अंग्रेज़ी-चीनी विराम चिह्न, प्रतीक और tokenizer के अज्ञात अक्षरों (`<unk>`) को स्वचालित रूप से छोड़ दिया जाता है, जिससे हर mask span वास्तविक अर्थयुक्त इकाई के अनुरूप रहे।
+
+* **सतत या ओवरलैपिंग span का स्वचालित विलय**  
+  आसन्न या ओवरलैपिंग मास्क span को स्वचालित रूप से मिलाया जाता है, यह सुनिश्चित करता है कि उत्पन्न `<extra_id_n>` इनपुट/आउटपुट जोड़े अनुक्रमित और प्रशिक्षण सिग्नल लगातार हों, और यह पूरी तरह से T5 मूल शोध पत्र के span corruption प्रशिक्षण विनिर्देश के अनुकूल हो।
+
+* **मल्टी-थ्रेडेड पैरेलल प्रोसेसिंग और स्वचालित नमूना रिटर्न**  
+  समायोज्य थ्रेड संख्या के साथ पैरेलल रूप से नमूने उत्पन्न करने का समर्थन, बड़े पैमाने पर कॉर्पस प्रोसेसिंग की दक्षता को काफी बढ़ाता है; सभी उत्पन्न नमूने स्वचालित रूप से वापस लौटाए जाते हैं और मूल अनुक्रम में एकत्र किए जाते हैं, अंततः उन्हें प्रशिक्षण के लिए सीधे उपयोग योग्य मानकीकृत JSONL डेटासेट के रूप में आउटपुट किया जाता है।
+
+**संदर्भ-संवेदनशील डेटा निर्माण, कीवर्ड प्राथमिकता मास्किंग, यादृच्छिक span मास्क और जानबूझकर निर्मित “अत्यधिक सूचना ह्रास” परिदृश्यों के माध्यम से, मॉडल सबसे प्रतिकूल इनपुट स्थितियों में भी पेशेवर अर्थ की सटीक समझ और पुनर्निर्माण बनाए रख सकता है।**  
+
+> उपयुक्त परिदृश्य: चिकित्सा, कानूनी, तकनीकी दस्तावेज़ आदि ऐसे पेशेवर कॉर्पस जिनमें सटीक अर्थ समझ की आवश्यकता होती है।
 
 ### ❗️प्रशिक्षण के लिए सावधानियां
 * **मॉडल को समय से पहले रुकने से रोकना**: प्री-प्रोसेसिंग के बाद, T5 मॉडल में लॉस (Loss) के धीरे-धीरे गिरने या स्थानीय उतार-चढ़ाव का भ्रम हो सकता है, जिससे सिस्टम गलती से प्रशिक्षण को जल्दी रोक सकता है।
@@ -363,18 +440,29 @@ mT5-base मानक मॉडल के साथ प्रारंभिक 
 * **토큰화 어긋남 문제**: 용어의 글자가 유실될 때 토큰라이저가 이를 의미 없는 파편으로 쪼개버려 모델이 의미적 중심을 잃게 됨.
 
 ### ✅ 현재 핵심 기능
-본 프로젝트는 복잡한 하드코딩 규칙에 의존하는 대신, 데이터 전처리 프로세스를 최적화하여 모델의 능력을 강화합니다:
+본 프로젝트는 현재 복잡한 하드코딩 규칙에 의존하지 않고, 데이터 전처리, 마스킹 전략 및 실행 프로세스를 최적화하여 모델 성능을 향상시키는 방식으로 설계되었습니다.
 
-* **전문가 사전 가이드 기반의 원자적 마스킹(Atomic Masking)**:
-사용자 정의 사전에 의존하여 전문 용어(예: 급성 전벽 심근경색)를 분할 불가능한 하나의 단위로 간주하고 마스킹을 강제합니다. 이 방식을 통해 모델이 잔여 글자로 요행을 바라는 것이 아니라, 문맥의 논리에서 답을 찾도록 강제합니다.
+* **긴 텍스트를 단락 및 문장 부호 기준으로 나누어 학습 샘플 생성**  
+  소설, 문서 또는 전문 코퍼스에서 자동으로 샘플을 생성하며, 단락 경계와 한영 문장 부호를 기준으로 분할합니다. 이전 텍스트의 마지막 문장을 컨텍스트 접두사로 유지하여 샘플의 의미 연속성을 보장하고, 단락 간 의미 단절을 완화하며, 단일 샘플 길이를 모델의 컨텍스트 창에 맞게 제한합니다.
 
-* **인위적 설정 강화 학습**:
-특정 고난도 용어의 마스킹 확률을 수동으로 높이는 기능을 지원하며(💡 권장 50%-70%, 80% 초과 금지), 동시에 전체 마스킹 비율(20%-25%)을 동기화하여 높일 수 있습니다.
+* **전문가 단어 사전을 활용한 원자적 마스킹**  
+  사용자 정의 도메인 단어 사전을 활용하여, 전문 용어(예: 급성 전벽 심근경색, 경피적 관상동맥 중재술)를 분리할 수 없는 단위로 마스킹합니다. 이를 통해 문자 단위 추측 경로를 차단하고, 모델이 컨텍스트 의미와 도메인 논리에 기반하여 복원하도록 강제합니다.
 
-* **문장 부호 자동 회피**:
-간섭 요인 유입을 방지합니다.
+* **수동 제어 가능한 강화 마스킹 전략**  
+  고난도 용어에 대해 마스킹 확률을 수동으로 조정 가능하며 (**💡권장 50%–70%, 80% 이상은 비추천**), 전체 마스킹 비율(약 20%–25%)도 동시 조정할 수 있어, 모델이 약한 지식 영역에서 추론 능력을 강화하도록 설계되었습니다.
 
-**인위적으로 '극단적 정보 결손' 상황을 조성함으로써, 모델이 최악의 입력 상태에서도 전문적인 의미를 정확하게 복원할 수 있도록 강제합니다.**
+* **문장 부호 및 의미 없는 토큰 자동 회피**  
+  마스킹 과정에서 한영 문장 부호, 특수 기호, tokenizer에서 인식되지 않는 문자(`<unk>`)를 자동으로 회피하여, 모든 마스크 span이 유효한 의미 단위와 대응되도록 보장합니다.
+
+* **연속 또는 중첩된 span 자동 병합**  
+  인접하거나 중첩된 마스크 span을 자동으로 병합하여 `<extra_id_n>` 입력/출력 순서를 일관되게 유지하고, 학습 신호를 연속적으로 제공하며 T5 원 논문의 span corruption 학습 규격을 완전히 준수합니다.
+
+* **멀티스레드 병렬 처리 및 샘플 자동 회수**  
+  스레드 수 조정이 가능한 병렬 처리로 대규모 코퍼스 처리 속도를 크게 향상시키며, 생성된 모든 샘플을 자동으로 회수하고 원본 순서대로 정렬하여, 최종적으로 학습에 바로 사용할 수 있는 표준 JSONL 데이터셋으로 출력합니다.
+
+**컨텍스트 인지 기반 데이터 구성, 키워드 우선 마스킹, 랜덤 span 마스킹 및 의도적으로 생성된 '극단적 정보 결손' 시나리오를 통해, 모델은 가장 불리한 입력 조건에서도 전문 용어의 정확한 의미 이해와 복원이 가능하도록 학습됩니다.**  
+
+> 적용 분야: 의학, 법률, 기술 문서 등 정확한 의미 이해가 요구되는 전문 코퍼스.
 
 ### ❗️ 학습 시 주의사항
 * **모델 조기 종료 방지**: 전처리 이후 T5 모델은 Loss 하락이 느려지거나 국소적인 변동이 발생하는 가짜 정체 현상이 나타날 수 있으며, 이로 인해 시스템이 학습을 잘못 조기 종료할 수 있습니다.
@@ -410,18 +498,29 @@ Os modelos tradicionais **T5** ou **mT5** (coletivamente chamados de T5) apresen
 * **Problema de Desalinhamento da Tokenização**: Quando um termo perde letras, o tokenizador o fragmenta em pedaços sem sentido, fazendo com que o modelo perca o foco semântico.
 
 ### ✅ Principais Funcionalidades Atuais
-Este projeto atualmente não depende de regras complexas de hard-coding, mas sim da otimização do fluxo de pré-processamento de dados para fortalecer a capacidade do modelo:
+Este projeto atualmente não depende de regras de codificação complexas, mas aprimora a capacidade do modelo por meio da otimização do pré-processamento de dados, das estratégias de máscara e do fluxo de execução:
 
-* **Mascaramento Atômico Guiado por Glossário Especializado**:
-Baseando-se em um glossário personalizado, o modelo é forçado a tratar termos técnicos (ex: Infarto Agudo do Miocárdio de Parede Anterior) como um todo indivisível ao realizar o mascaramento. Dessa forma, obriga-se o modelo a buscar respostas na lógica do contexto, em vez de tentar a sorte com caracteres residuais.
+* **Divisão de textos longos em blocos de treinamento por parágrafo e pontuação**  
+  Constrói automaticamente amostras a partir de romances, documentos ou corpora especializados, dividindo com base em limites de parágrafos e pontuação em chinês e inglês, ao mesmo tempo em que mantém a frase final do bloco anterior como prefixo contextual, garantindo a continuidade semântica das amostras, mitigando quebras de sentido entre blocos e controlando o tamanho das amostras para se adequar à janela de contexto do modelo.
 
-* **Treinamento Reforçado por Configuração Manual**:
-Suporta o aumento manual da probabilidade de mascaramento para termos específicos de alta dificuldade (💡 recomendado entre 50%-70%, não deve exceder 80%), permitindo também o aumento simultâneo da taxa de mascaramento global (20%-25%).
+* **Máscara atomizada guiada por dicionário de termos especializados**  
+  Utiliza um dicionário personalizado de termos de domínio para tratar termos técnicos (por exemplo: infarto agudo de parede anterior, intervenção coronária percutânea) como unidades indivisíveis durante a aplicação da máscara, bloqueando caminhos de previsão por caractere e forçando o modelo a reconstruir o conteúdo com base na lógica e semântica do contexto.
 
-* **Evasão Automática de Pontuação**:
-Evita a introdução de interferências.
+* **Estratégia de máscara reforçada e controlável manualmente**  
+  Permite aumentar manualmente a probabilidade de mascaramento de termos de alta complexidade (**💡 recomendado entre 50%–70%, não ultrapassar 80%**) e ajustar simultaneamente a taxa total de máscara (aproximadamente 20%–25%), fortalecendo a capacidade de raciocínio do modelo em pontos fracos do conhecimento.
 
-**Ao criar artificialmente cenários de "perda extrema de informação", o modelo é forçado a manter uma restauração precisa da semântica profissional mesmo nas piores condições de entrada.**
+* **Evitando automaticamente pontuação e tokens semânticos irrelevantes**  
+  Durante o mascaramento, ignora automaticamente pontuações em chinês e inglês, símbolos e caracteres desconhecidos do tokenizer (`<unk>`), garantindo que cada span mascarado corresponda a uma unidade semântica válida.
+
+* **Mesclagem automática de spans consecutivos ou sobrepostos**  
+  Mescla spans de máscara adjacentes ou sobrepostos automaticamente, garantindo que os pares de entrada/saída `<extra_id_n>` sejam ordenados corretamente, com sinal de treinamento contínuo, totalmente compatíveis com a norma de span corruption do artigo original do T5.
+
+* **Processamento paralelo multithread e retorno automático das amostras**  
+  Suporta a geração de amostras em paralelo com número de threads configurável, aumentando significativamente a eficiência do processamento de grandes corpora; todas as amostras geradas são retornadas automaticamente e reorganizadas na ordem original, resultando em um dataset JSONL padronizado pronto para treinamento.
+
+**Por meio da construção de dados sensíveis ao contexto, mascaramento priorizado por palavras-chave, spans aleatórios e cenários de "perda extrema de informação" artificialmente criados, o modelo mantém a compreensão e reconstrução precisa da semântica especializada mesmo nas condições de entrada mais adversas.**
+
+> Cenários de aplicação: corpora médicos, jurídicos, documentos técnicos ou qualquer contexto que exija compreensão precisa da semântica especializada.
 
 ### ❗️ Observações de Treinamento
 * **Prevenção de Parada Precoce**: Após o pré-processamento, o modelo T5 pode apresentar uma queda lenta na Loss ou flutuações locais ilusórias, levando o sistema a interromper o treinamento prematuramente por erro.
