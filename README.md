@@ -566,6 +566,10 @@ Realizar a reparação ponta a ponta de textos danificados por OCR sem a necessi
 <a name="Demo"></a>
 ## 📡 Demo
 
+-[Demo-EN](./Demo-EN.txt)
+
+- ⭐️[Demo-CN](./Demo-CN.txt)
+  
 ---
 <a name="Requirements"></a>
 ## 🛠️ Requirements
