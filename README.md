@@ -23,7 +23,7 @@
 <a name="english"></a>
 ## ⭐️ English
 
-**T5-Refiner-DomainFocus** aims to empower models with intrinsic "semantic resilience" through **pre-training stage** strategy optimization, enabling more robust handling of text corruption and the injection of domain-specific expertise.
+**T5-Refiner-DomainFocus** aims to empower models with intrinsic "semantic resilience" through **pre-training stage** strategy optimization, **enabling more robust handling of text corruption and the injection of domain-specific expertise.**
 
 ### 📖 Project Background
 During **the digitization of medical records**, **OCR (Optical Character Recognition)** often suffers from "character defects" in core terminology due to damaged paper, stamp occlusion, or other physical factors.
@@ -70,7 +70,7 @@ Eliminating the need for manual anchor points to achieve end-to-end restoration 
 ---
 <a name="chinese"></a>
 ## ⭐️中文
-**T5-Refiner-DomainFocus** 旨在通过**预训练阶段**的策略优化，赋予模型一种内在的“语义韧性”，使其能更稳健地处理文本缺损和注入领域专业知识。
+**T5-Refiner-DomainFocus** 旨在通过**预训练阶段**的策略优化，赋予模型一种内在的“语义韧性”，**使其能更稳健地处理文本缺损和注入领域专业知识。**
 
 ### 📖项目背景
 在处理**医学档案数字化时**，**OCR（光学字符识别）** 常因纸质受损、印章遮挡等原因，导致核心术语出现“字符缺损”。
