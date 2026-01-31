@@ -27,11 +27,24 @@ NORMAL_MASK_MAX_LENGTH = 3             # Maximum length of a randomly masked spa
 MAX_WORKERS = 12                        # Maximum number of threads for parallel sample generation
 
 # --- Your T5 Tokenizer ---
-tokenizer = AutoTokenizer.from_pretrained(".", use_fast=True)  # Load your T5 tokenizer here
+tokenizer = AutoTokenizer.from_pretrained(" ", use_fast=True)  # Load your T5 tokenizer here
 
 # Regex to identify content characters (Chinese, English letters, numbers)
 CONTENT_RE = re.compile(r'[\u4e00-\u9fffA-Za-z0-9]')
 
+SENTENCE_SPLIT_RE = re.compile(r'([。！？；，,”.\n])')  # Can be adjusted for different text scenarios
+
+def split_sentences(text):
+    # Use global precompiled regex for splitting
+    sentences = SENTENCE_SPLIT_RE.split(text)
+    # Optionally merge sentences with punctuation
+    result = []
+    for i in range(0, len(sentences)-1, 2):
+        sentence = sentences[i].strip()
+        punctuation = sentences[i+1].strip()
+        if sentence:
+            result.append(sentence + punctuation)
+    return result
 
 def find_unknown_chars(text, tokenizer):
     
@@ -72,7 +85,7 @@ def load_keywords(filepath):
 def split_sentences1(text):
 # Split text into sentences based on periods, question marks, exclamation marks, semicolons, etc.
 
-    sentences = re.split(r'([。！？；，,”\n])', text)
+    sentences = split_sentences(text) #Different text scenarios may require modifications
     result = []
     for i in range(0, len(sentences)-1, 2):
         sentence = sentences[i].strip()
@@ -97,7 +110,7 @@ def first_add(chunks):
 def split_text_by_punctuation(paragraph_buffer, max_len=440):
 
     text = "".join(paragraph_buffer)
-    sentences = re.split(r'([。！？；!?，,])', text)
+    sentences = split_sentences(text)
     chunks = []
     current_chunk = ""
 
