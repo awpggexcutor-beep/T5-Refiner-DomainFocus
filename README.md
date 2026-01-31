@@ -48,3 +48,44 @@
 利用分词器的“异常碎片”作为隐性信号。当 OCR 识别出现严重错位时，模型能通过分词序列的异常波动，自动定位到语义断裂处。
 * 语义自动对齐
 无需人工指定衔接点，实现模型对 OCR 损坏文本的端到端修复。
+
+
+---
+<a name="References"></a>
+## 💪References / Citation
+```markdown
+This project builds upon the T5 or mT5. If you use mT5, please cite:
+
+@inproceedings{xue-etal-2021-mt5,
+    title = "m{T}5: A Massively Multilingual Pre-trained Text-to-Text Transformer",
+    author = "Xue, Linting  and
+      Constant, Noah  and
+      Roberts, Adam  and
+      Kale, Mihir  and
+      Al-Rfou, Rami  and
+      Siddhant, Aditya  and
+      Barua, Aditya  and
+      Raffel, Colin",
+    booktitle = "Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies",
+    month = jun,
+    year = "2021",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2021.naacl-main.41",
+    doi = "10.18653/v1/2021.naacl-main.41",
+    pages = "483--498"
+}
+
+If you use this project, please cite it as:
+
+@misc{llap4585,
+    title={{T5-Refiner-DomainFocus}: Injecting domain expertise into T5 via precision vocabulary-guided masking.},
+    author={llap4585},
+    howpublished = {\url{https://github.com/llap4585/T5-Refiner-DomainFocus}},
+    year={2026}
+}
+
+```
+---
+
+> **Disclaimer:** The non-English and non-Chinese versions of this documentation are provided for convenience only and were generated using machine translation. In case of any discrepancy, the Chinese version shall prevail.
