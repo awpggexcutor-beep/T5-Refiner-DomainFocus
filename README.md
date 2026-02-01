@@ -74,6 +74,7 @@ This project does not rely on complex hard-coded rules. Instead, it enhances mod
 ### ❗️ Training Notes
 * **Preventing Early Stopping**: After preprocessing, T5 models may exhibit slow loss reduction or local fluctuations, which can trick systems into stopping training prematurely.
 * **Convergence Judgment**: It is recommended to extend training duration and evaluate convergence based on whether the loss decreases steadily across multiple stages. Insufficient training will significantly degrade restoration performance.
+* [T5-Refiner-DomainFocus-TrainOnly](https://github.com/llap4585/T5-Refiner-DomainFocus-TrainOnly)
 
 ### 📊 Evaluation
 Based on preliminary testing with the mT5-base standard model:
@@ -134,6 +135,8 @@ Eliminating the need for manual anchor points to achieve end-to-end restoration 
 ### ❗️训练注意事项
 * **防止模型提前停止**：在预处理之后，T5 模型可能会出现 Loss 下降缓慢或产生局部波动的假象，导致系统错误地提前停止训练。
 * **收敛判断建议**：推荐增加训练时长，并根据多个阶段的 Loss 是否持续稳定下降来综合判断模型收敛情况。若训练时间不足，还原效果可能会大打折扣。
+* [T5-Refiner-DomainFocus-TrainOnly](https://github.com/llap4585/T5-Refiner-DomainFocus-TrainOnly)
+
 
 ### 📊效果评估
 根据初步测试对比，在 mT5-base 标准模型中：
@@ -194,7 +197,8 @@ Eliminating the need for manual anchor points to achieve end-to-end restoration 
 ### ❗️訓練上の注意点
 * **モデルの早期停止の防止**：前処理後、T5モデルは損失（Loss）の下落が緩やかになったり、局所的な変動が生じたりする「見かけ上の停滞」が発生し、システムが誤って訓練を早期終了させる可能性があります。
 * **収束判断の推奨**：訓練時間を延長し、複数のフェーズで損失が継続的に安定して下落しているかに基づいて、モデルの収束を総合的に判断することを推奨します。訓練時間が不足すると、復元効果が大幅に低下する可能性があります。
-
+* [T5-Refiner-DomainFocus-TrainOnly](https://github.com/llap4585/T5-Refiner-DomainFocus-TrainOnly)
+  
 ### 📊効果評価
 mT5-base標準モデルを用いた初期テストの比較：
 * **標準モデルのパフォーマンス**：専門分野の語彙復元率は推定60%以下。残りの40%は論理が混乱しており、業務利用はほぼ不可能です。
@@ -254,6 +258,7 @@ Dieses Projekt ist derzeit nicht auf komplexe Hardcodierungsregeln angewiesen, s
 ### ❗️ Hinweise zum Training
 * **Vorzeitigen Stopp des Modells verhindern**: Nach dem Preprocessing kann es bei T5-Modellen zu einer Täuschung durch langsam sinkenden Loss oder lokale Schwankungen kommen, was dazu führt, dass das System das Training fälschlicherweise vorzeitig stoppt.
 * **Empfehlung zur Konvergenzbeurteilung**: Es wird empfohlen, die Trainingsdauer zu erhöhen und die Konvergenz des Modells basierend auf dem kontinuierlichen und stabilen Sinken des Loss über mehrere Phasen hinweg umfassend zu beurteilen. Bei unzureichender Trainingszeit kann der Wiederherstellungseffekt stark beeinträchtigt werden.
+*  [T5-Refiner-DomainFocus-TrainOnly](https://github.com/llap4585/T5-Refiner-DomainFocus-TrainOnly)
 
 ### 📊 Effektivitätsbewertung
 Basierend auf vorläufigen Vergleichstests im mT5-base Standardmodell:
@@ -314,7 +319,8 @@ Ce projet ne dépend pas de règles codées complexes, mais renforce les capacit
 ### ❗️ Précautions d'entraînement
 * **Prévenir l'arrêt prématuré du modèle** : Après le prétraitement, le modèle T5 peut donner l'illusion d'une baisse lente de la perte (Loss) ou de fluctuations locales, ce qui peut amener le système à arrêter l'entraînement prématurément par erreur.
 * **Conseils pour juger de la convergence** : Il est recommandé d'augmenter la durée d'entraînement et de juger de la convergence de manière globale en vérifiant si la perte continue de descendre de façon stable sur plusieurs étapes. Si le temps d'entraînement est insuffisant, l'effet de restauration pourrait être considérablement réduit.
-
+* [T5-Refiner-DomainFocus-TrainOnly](https://github.com/llap4585/T5-Refiner-DomainFocus-TrainOnly)
+  
 ### 📊 Évaluation des résultats
 Selon les tests comparatifs préliminaires sur le modèle standard mT5-base :
 * **Performance du modèle standard** : Le taux de restauration du vocabulaire spécialisé est estimé à moins de 60 %, les 40 % restants étant logiquement confus et pratiquement inacceptables pour une utilisation métier.
@@ -374,7 +380,8 @@ Este proyecto actualmente no depende de reglas codificadas complejas, sino que m
 ### ❗️ Notas sobre el Entrenamiento
 * **Prevenir la parada temprana del modelo**: Tras el preprocesamiento, el modelo T5 puede mostrar una caída lenta de la pérdida (Loss) o fluctuaciones locales, lo que podría llevar al sistema a detener el entrenamiento prematuramente por error.
 * **Sugerencia para juzgar la convergencia**: Se recomienda aumentar la duración del entrenamiento y juzgar la convergencia del modelo basándose en si la pérdida disminuye de forma estable y continua a través de múltiples etapas. Si el tiempo de entrenamiento es insuficiente, el efecto de restauración podría verse seriamente afectado.
-
+* [T5-Refiner-DomainFocus-TrainOnly](https://github.com/llap4585/T5-Refiner-DomainFocus-TrainOnly)
+  
 ### 📊 Evaluación de Resultados
 Según las comparaciones de pruebas preliminares en el modelo estándar mT5-base:
 * **Rendimiento del modelo estándar**: La tasa de restauración de vocabulario profesional se estima por debajo del 60%, y el 40% restante de los resultados carece de coherencia lógica, siendo casi inaceptable para el uso empresarial.
@@ -434,7 +441,8 @@ Lograr la reparación de extremo a extremo del texto dañado por OCR sin necesid
 ### ❗️प्रशिक्षण के लिए सावधानियां
 * **मॉडल को समय से पहले रुकने से रोकना**: प्री-प्रोसेसिंग के बाद, T5 मॉडल में लॉस (Loss) के धीरे-धीरे गिरने या स्थानीय उतार-चढ़ाव का भ्रम हो सकता है, जिससे सिस्टम गलती से प्रशिक्षण को जल्दी रोक सकता है।
 * **अभिसरण (Convergence) निर्णय का सुझाव**: प्रशिक्षण का समय बढ़ाने की सिफारिश की जाती है, और मॉडल के अभिसरण का आकलन इस आधार पर करें कि क्या कई चरणों में लॉस लगातार और स्थिरता से गिर रहा है। यदि प्रशिक्षण का समय अपर्याप्त है, तो बहाली का प्रभाव बहुत कम हो सकता है।
-
+* [T5-Refiner-DomainFocus-TrainOnly](https://github.com/llap4585/T5-Refiner-DomainFocus-TrainOnly)
+  
 ### 📊प्रभाव का मूल्यांकन
 mT5-base मानक मॉडल के साथ प्रारंभिक परीक्षण तुलना के अनुसार:
 * **मानक मॉडल का प्रदर्शन**: पेशेवर डोमेन शब्दावली बहाली दर 60% से कम होने का अनुमान है, शेष 40% परिणाम तार्किक रूप से भ्रमित हैं और व्यावसायिक उपयोग के लिए लगभग अस्वीकार्य हैं।
@@ -494,7 +502,8 @@ mT5-base मानक मॉडल के साथ प्रारंभिक 
 ### ❗️ 학습 시 주의사항
 * **모델 조기 종료 방지**: 전처리 이후 T5 모델은 Loss 하락이 느려지거나 국소적인 변동이 발생하는 가짜 정체 현상이 나타날 수 있으며, 이로 인해 시스템이 학습을 잘못 조기 종료할 수 있습니다.
 * **수렴 판단 권장**: 학습 시간을 늘리고, 여러 단계에서 Loss가 지속적으로 안정되게 하락하는지를 종합적으로 판단하여 수렴 여부를 결정할 것을 권장합니다. 학습 시간이 부족할 경우 복원 효과가 크게 떨어질 수 있습니다.
-
+* [T5-Refiner-DomainFocus-TrainOnly](https://github.com/llap4585/T5-Refiner-DomainFocus-TrainOnly)
+  
 ### 📊 효과 평가
 mT5-base 표준 모델과의 예비 테스트 비교 결과:
 * **표준 모델 성능**: 전문 도메인 어휘 복원율이 60% 이하로 추정되며, 나머지 40%의 복원 결과는 논리가 혼란스러워 실제 업무에 적용하기 어려운 수준입니다.
@@ -554,7 +563,8 @@ Este projeto atualmente não depende de regras de codificação complexas, mas a
 ### ❗️ Observações de Treinamento
 * **Prevenção de Parada Precoce**: Após o pré-processamento, o modelo T5 pode apresentar uma queda lenta na Loss ou flutuações locais ilusórias, levando o sistema a interromper o treinamento prematuramente por erro.
 * **Sugestão de Julgamento de Convergência**: Recomenda-se aumentar o tempo de treinamento e julgar a convergência do modelo de forma abrangente, baseando-se na estabilidade da queda da Loss em múltiplas etapas. Se o tempo de treinamento for insuficiente, o efeito de restauração pode ser drasticamente reduzido.
-
+* [T5-Refiner-DomainFocus-TrainOnly](https://github.com/llap4585/T5-Refiner-DomainFocus-TrainOnly)
+  
 ### 📊 Avaliação de Resultados
 De acordo com testes comparativos preliminares no modelo padrão mT5-base:
 * **Desempenho do Modelo Padrão**: A taxa de restauração de vocabulário especializado é estimada em menos de 60%, com os 40% restantes apresentando resultados logicamente confusos, sendo quase inaceitáveis para o negócio.
