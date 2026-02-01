@@ -4,6 +4,8 @@
 ![Views](https://komarev.com/ghpvc/?username=llap4585&repo=T5-Refiner-DomainFocus&label=Project%20Views&color=blue&style=flat-square)
 
 ---
+<a name="Introduction"></a>：
+
 [⭐️English](#english) | [⭐️中文](#chinese)
 
 
@@ -569,6 +571,8 @@ Realizar a reparação ponta a ponta de textos danificados por OCR sem a necessi
 （Most of the application environment for this project is in Chinese, which may cause minor issues with processing English, such as splitting by punctuation. The T5 model itself does support English.）
 
 - ⭐️[Demo-CN](./Demo-CN.txt)
+
+[Introduction](#Introduction)
   
 ---
 <a name="Requirements"></a>
