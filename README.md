@@ -24,7 +24,7 @@ Arabic العربية, Bengali বাংলা, Russian русский, Italian 
 
 [Demo](#Demo) 
 
-[Prerequisites](#Prerequisites)
+[Prerequisite - without experience using T5 or mT5](#Prerequisites)
 
 [Requirements](#Requirements)
 
@@ -591,7 +591,7 @@ Realizar a reparação ponta a ponta de textos danificados por OCR sem a necessi
 
 ## Prerequisites
 
-If you have experience: [Requirements](#Requirements)
+**If you have experience in T5 or mT5**: [Requirements](#Requirements)
 
 > **English:**
 >If you are not familiar with Transformer models and pretraining mechanisms, it is recommended to study the following topics first:  
